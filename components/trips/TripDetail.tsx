@@ -195,7 +195,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
 
       {/* ---------- Body ---------- */}
       <div className="container-x grid gap-14 py-16 lg:grid-cols-12 lg:gap-16 lg:py-24">
-        <div className="space-y-24 lg:col-span-8">
+        <div className="min-w-0 space-y-24 lg:col-span-8">
           {/* Overview */}
           <section id="overview" className="scroll-mt-36">
             <DetailHeading index={num("overview")} title={t.detail.overview} />
@@ -240,7 +240,41 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
             {trip.pricingSchedule && trip.pricingSchedule.length > 0 && (
               <Reveal delay={0.1}>
                 <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{t.detail.schedule}</h3>
-                <div className="mt-5 overflow-x-auto rounded-md border border-line bg-white">
+                {/* Phones: one card per date group, so every price stays visible */}
+                <ul className="mt-5 space-y-3 sm:hidden">
+                  {trip.pricingSchedule.map((row) => (
+                    <li key={row.dates.join()} className="rounded-md border border-line bg-white p-4">
+                      <div className="flex flex-wrap gap-1.5">
+                        {row.dates.map((d) => (
+                          <span key={d} className="rounded-full bg-mist px-2.5 py-0.5 text-[13px] font-medium text-navy-900 ring-1 ring-line">
+                            {formatMonthDay(d, lang)}
+                          </span>
+                        ))}
+                      </div>
+                      <dl className="mt-4 grid grid-cols-3 gap-2 border-t border-line pt-3">
+                        <div>
+                          <dt className="text-[10px] font-semibold tracking-[0.14em] text-muted uppercase">{t.detail.nights}</dt>
+                          <dd className="mt-1 text-sm text-ink/80">{countLabel(row.nights, "night", lang)}</dd>
+                        </div>
+                        <div>
+                          <dt className="text-[10px] font-semibold tracking-[0.14em] text-muted uppercase">{t.detail.adult}</dt>
+                          <dd className="mt-1 text-sm font-semibold whitespace-nowrap text-navy-900 tabular-nums">
+                            {formatNumber(row.adult, lang)} <span className="text-xs text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[10px] font-semibold tracking-[0.14em] text-muted uppercase">{t.detail.child}</dt>
+                          <dd className="mt-1 text-sm font-semibold whitespace-nowrap text-navy-900 tabular-nums">
+                            {formatNumber(row.child, lang)} <span className="text-xs text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                          </dd>
+                        </div>
+                      </dl>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Tablet & desktop: table */}
+                <div className="mt-5 hidden overflow-x-auto rounded-md border border-line bg-white sm:block">
                   <table className="w-full min-w-[520px] text-[15px]">
                     <thead>
                       <tr className="border-b border-line text-[10.5px] tracking-[0.16em] text-muted uppercase">
