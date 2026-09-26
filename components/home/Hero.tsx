@@ -126,15 +126,6 @@ export function Hero() {
 
         {/* Story cards */}
         <motion.div style={{ y: cardsY }} className="relative mx-auto h-[440px] w-full max-w-[520px] sm:h-[540px] lg:col-span-6 lg:h-[620px] lg:max-w-none">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="absolute top-0 start-0 z-30 flex items-center gap-2 rounded-full bg-white/90 px-3.5 py-1.5 text-xs font-semibold text-navy-900 shadow-sm backdrop-blur"
-          >
-            <FacebookIcon className="size-3.5 text-[#1877F2]" />
-            {t.hero.fromFacebook}
-          </motion.p>
 
           <StoryCard story={stories[0]} className="absolute top-8 end-[4%] z-20 h-[88%] w-[56%] lg:w-[50%]" rotate={2.5} delay={0.4} preload />
           <StoryCard story={stories[1]} className="absolute top-[22%] start-[2%] z-10 h-[64%] w-[40%] lg:w-[36%]" rotate={-4} delay={0.6} />
