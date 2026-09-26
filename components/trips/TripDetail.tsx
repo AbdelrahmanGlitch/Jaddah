@@ -4,20 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
-import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock3, Expand, Images, Info, MapPin, Plane, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarDays, Check, Clock3, Expand, Images, Info, MapPin, Plane, Sun, X } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
-import { countLabel, formatCurrencyLabel, formatMonthDay, formatNumber } from "@/lib/format";
-import { lowestAdultPrice, tripDepartures } from "@/data/trips";
+import { countLabel, formatCurrencyLabel, formatDate, formatMonthDay, formatNumber } from "@/lib/format";
+import { hasPrice, lowestAdultPrice, tripDepartures } from "@/data/trips";
 import { chatLink, company } from "@/data/company";
 import type { Trip } from "@/lib/types";
-import { AvailabilityBadge, Price, ServiceList, durationLabel } from "./TripMeta";
+import { AvailabilityBadge, OfferStamp, Price, ServiceList, durationLabel } from "./TripMeta";
 import { TripCard } from "./TripCard";
 import { Lightbox } from "@/components/ui/Lightbox";
 import { Accordion } from "@/components/ui/Accordion";
 import { Reveal } from "@/components/ui/Reveal";
 import { BookingForm } from "@/components/booking/BookingForm";
-import { ChatIcon } from "@/components/ui/ChatIcon";
+import { FacebookIcon, WhatsAppIcon } from "@/components/ui/BrandIcons";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -72,12 +72,14 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
   const singlePrice = (trip.priceOptions?.filter((p) => p.kind === "adult").length ?? 0) === 1;
   const departures = tripDepartures(trip);
   const facts = [
+    { icon: MapPin, label: t.detail.destination, value: l(trip.destination) },
     duration && { icon: Clock3, label: t.detail.duration, value: duration },
     trip.period && { icon: CalendarDays, label: t.trips.period, value: l(trip.period) },
     trip.program && { icon: Info, label: t.trips.program, value: l(trip.program) },
-    trip.season && { icon: CalendarDays, label: t.trips.season, value: l(trip.season) },
+    trip.season && { icon: Sun, label: t.trips.season, value: l(trip.season) },
     departures.length > 0 && { icon: CalendarDays, label: t.trips.departures, value: t.trips.datesCount(departures.length) },
     trip.departureCity && { icon: Plane, label: t.detail.departingFrom, value: l(trip.departureCity) },
+    trip.postedOn && { icon: CalendarDays, label: t.detail.postedOn, value: formatDate(trip.postedOn, lang, { day: "numeric", month: "long", year: "numeric" }) },
   ]
     .filter((f): f is { icon: typeof Clock3; label: string; value: string } => Boolean(f))
     .slice(0, 4);
@@ -92,64 +94,74 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
 
   return (
     <article className="bg-mist">
-      {/* ---------- Hero gallery ---------- */}
-      <section ref={heroRef} className="relative isolate flex min-h-[88svh] flex-col overflow-hidden bg-navy-950 text-white">
-        <motion.div className="absolute inset-0 -z-10" style={{ y: heroY }}>
-          <Image src={trip.heroImage} alt={l(trip.title)} fill preload sizes="100vw" className="animate-kenburns object-cover" />
+      {/* ---------- Hero ---------- */}
+      <section ref={heroRef} className="relative isolate overflow-hidden bg-navy-950 text-white">
+        {/* Soft backdrop from the offer photo; the photo itself is shown framed (Facebook photos are small) */}
+        <motion.div className="absolute inset-0 -z-10 opacity-45" style={{ y: heroY }}>
+          <Image src={trip.heroImage} alt="" fill sizes="50vw" className="scale-110 object-cover blur-2xl" />
         </motion.div>
-        <div className="absolute inset-0 -z-10 bg-linear-to-t from-navy-950 via-navy-950/40 to-navy-950/50" />
+        <div className="absolute inset-0 -z-10 bg-linear-to-t from-navy-950 via-navy-950/75 to-navy-950/55" />
 
-        <div className="container-x flex flex-1 flex-col justify-end pt-32 pb-10 sm:pb-14">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <Link href="/trips" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white">
-              <ArrowLeft className="size-4 rtl:-scale-x-100" />
-              {t.detail.back}
-            </Link>
-          </motion.div>
+        <div className="container-x grid items-center gap-12 pt-32 pb-14 lg:grid-cols-12 lg:gap-16 lg:pt-36 lg:pb-20">
+          <div className="lg:col-span-7">
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+              <Link href="/trips" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition hover:text-white">
+                <ArrowLeft className="size-4 rtl:-scale-x-100" />
+                {t.detail.back}
+              </Link>
+            </motion.div>
 
-          <div className="mt-8 grid items-end gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-8">
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.8, ease }} className="flex flex-wrap items-center gap-2">
-                {trip.categories.map((c) => (
-                  <span key={c} className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-wide ring-1 ring-white/20 backdrop-blur-md">
-                    {t.categories[c]}
-                  </span>
-                ))}
-                {trip.availability && <AvailabilityBadge availability={trip.availability} />}
-              </motion.div>
-              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8, ease }} className="mt-6 flex items-center gap-2 text-xs font-semibold tracking-[0.25em] text-sand uppercase">
-                <MapPin className="size-4 text-gold" />
-                {l(trip.country)} · {l(trip.destination)}
-              </motion.p>
-              <h1 className="rtl-leading mt-4 overflow-hidden text-[clamp(2.6rem,7vw,6rem)] leading-[0.98] font-semibold tracking-[-0.04em] text-balance">
-                <motion.span className="block" initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ delay: 0.3, duration: 1.1, ease }}>
-                  {l(trip.title)}
-                </motion.span>
-              </h1>
-              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease }} className="mt-5 max-w-2xl text-base text-white/75 sm:text-lg">
-                {l(trip.shortDescription)}
-              </motion.p>
-            </div>
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.8, ease }} className="mt-8 flex flex-wrap items-center gap-2">
+              <OfferStamp trip={trip} />
+              {trip.categories.map((c) => (
+                <span key={c} className="rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold tracking-wide ring-1 ring-white/20 backdrop-blur-md">
+                  {t.categories[c]}
+                </span>
+              ))}
+              {trip.availability && <AvailabilityBadge availability={trip.availability} />}
+            </motion.div>
+            <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.8, ease }} className="mt-6 flex items-center gap-2 text-sm font-semibold text-sand">
+              <MapPin className="size-4 text-sun" />
+              {l(trip.destination)} · {l(trip.country)}
+            </motion.p>
+            <h1 className="rtl-leading mt-4 overflow-hidden text-[clamp(2.4rem,5.6vw,4.6rem)] leading-[1.05] font-bold tracking-[-0.03em] text-balance">
+              <motion.span className="block" initial={{ y: "100%" }} animate={{ y: 0 }} transition={{ delay: 0.3, duration: 1.1, ease }}>
+                {l(trip.title)}
+              </motion.span>
+            </h1>
+            <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.8, ease }} className="mt-5 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
+              {l(trip.shortDescription)}
+            </motion.p>
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8, ease }} className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <a href={chatLink(`${t.detail.book}: ${l(trip.title)} — ${l(trip.destination)}`).href} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp px-7 py-4">
+                <WhatsAppIcon className="size-5" />
+                {t.detail.askQuestion}
+              </a>
+              <a href="#book" className="btn btn-ghost-light px-7 py-4">
+                {t.detail.book}
+              </a>
+            </motion.div>
+          </div>
 
-            {/* Thumbnails */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.9, ease }} className="lg:col-span-4">
-              <div className="flex gap-2 lg:justify-end">
-                {trip.gallery.slice(1, 4).map((src, i) => (
-                  <button key={src} type="button" onClick={() => setLightbox(i + 1)} className="group relative aspect-square w-1/4 max-w-24 overflow-hidden rounded-md ring-1 ring-white/20">
+          {/* Framed photo + thumbnails */}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 1, ease }} className="mx-auto w-full max-w-sm lg:col-span-5 lg:max-w-md">
+            <button type="button" onClick={() => setLightbox(0)} className="group relative block aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-[0_40px_80px_-30px_rgba(0,0,0,0.7)] ring-4 ring-white/90" aria-label={t.detail.viewGallery}>
+              <Image src={trip.heroImage} alt={l(trip.title)} fill preload sizes="(max-width: 1024px) 90vw, 30vw" className="object-cover transition-transform duration-[1.4s] ease-(--ease-premium) group-hover:scale-105" style={{ objectPosition: "50% 60%" }} />
+              <span className="absolute end-3 bottom-3 flex items-center gap-1.5 rounded-full bg-navy-950/60 px-3 py-1.5 text-xs font-semibold backdrop-blur-md">
+                <Images className="size-4" strokeWidth={1.6} />
+                {trip.gallery.length} {t.detail.photos}
+              </span>
+            </button>
+            {trip.gallery.length > 1 && (
+              <div className="mt-3 flex gap-2">
+                {trip.gallery.slice(1, 5).map((src, i) => (
+                  <button key={src} type="button" onClick={() => setLightbox(i + 1)} className="group relative aspect-square w-1/4 overflow-hidden rounded-md ring-1 ring-white/25" aria-label={galleryItems[i + 1].alt}>
                     <Image src={src} alt="" fill sizes="96px" className="object-cover transition duration-700 group-hover:scale-110" />
                   </button>
                 ))}
-                <button
-                  type="button"
-                  onClick={() => setLightbox(0)}
-                  className="flex aspect-square w-1/4 max-w-24 flex-col items-center justify-center gap-1 rounded-md bg-white/10 text-center text-[11px] font-semibold ring-1 ring-white/20 backdrop-blur-md transition hover:bg-white/20"
-                >
-                  <Images className="size-5" strokeWidth={1.5} />
-                  {trip.gallery.length} {t.detail.photos}
-                </button>
               </div>
-            </motion.div>
-          </div>
+            )}
+          </motion.div>
         </div>
       </section>
 
@@ -187,7 +199,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
               className={cn("relative shrink-0 px-3 py-4 text-[13px] font-medium transition-colors sm:px-4", activeSection === s.id ? "text-navy-900" : "text-muted hover:text-navy-900")}
             >
               {s.label}
-              {activeSection === s.id && <motion.span layoutId="section-underline" className="absolute inset-x-3 bottom-0 h-0.5 bg-teal sm:inset-x-4" />}
+              {activeSection === s.id && <motion.span layoutId="section-underline" className="absolute inset-x-3 bottom-0 h-0.5 bg-sun sm:inset-x-4" />}
             </a>
           ))}
         </div>
@@ -201,14 +213,20 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
             <DetailHeading index={num("overview")} title={t.detail.overview} />
             <Reveal>
               <p className="mt-8 text-lg leading-relaxed text-ink/80 sm:text-xl">{l(trip.description)}</p>
+              {trip.postedOn && (
+                <a href={company.facebook.url} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-ocean">
+                  <FacebookIcon className="size-4 text-[#1877F2]" />
+                  {t.detail.source} {formatDate(trip.postedOn, lang, { day: "numeric", month: "long", year: "numeric" })}
+                </a>
+              )}
             </Reveal>
             {trip.highlights.length > 0 && (
               <Reveal delay={0.1}>
-                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{t.detail.highlights}</h3>
+                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-sun-deep uppercase">{t.detail.highlights}</h3>
                 <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                   {trip.highlights.map((h) => (
                     <li key={h.en} className="flex items-center gap-3 rounded-md border border-line bg-white px-4 py-3.5 text-[15px] font-medium text-navy-900">
-                      <span className="size-1.5 shrink-0 rotate-45 bg-gold" />
+                      <span className="size-1.5 shrink-0 rotate-45 bg-sun-deep" />
                       {l(h)}
                     </li>
                   ))}
@@ -219,14 +237,14 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
             {/* Fixed prices */}
             {trip.priceOptions && trip.priceOptions.length > 0 && (
               <Reveal delay={0.1}>
-                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{t.detail.prices}</h3>
+                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-sun-deep uppercase">{t.detail.prices}</h3>
                 <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                   {trip.priceOptions.map((p) => (
                     <li key={p.label.en} className="rounded-md border border-line bg-white px-4 py-3.5">
                       <div className="flex items-baseline justify-between gap-4">
                         <span className="text-[15px] font-medium text-navy-900">{l(p.label)}</span>
                         <span className="shrink-0 font-semibold text-navy-900">
-                          <span className="tabular-nums">{formatNumber(p.amount, lang)}</span> <span className="text-sm text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                          <span className="tabular-nums">{formatNumber(p.amount, lang)}</span> <span className="text-sm text-sun-deep">{formatCurrencyLabel(trip.currency, lang)}</span>
                         </span>
                       </div>
                       {p.note && <p className="mt-1 text-sm text-muted">{l(p.note)}</p>}
@@ -239,7 +257,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
             {/* Date-based prices */}
             {trip.pricingSchedule && trip.pricingSchedule.length > 0 && (
               <Reveal delay={0.1}>
-                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{t.detail.schedule}</h3>
+                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-sun-deep uppercase">{t.detail.schedule}</h3>
                 {/* Phones: one card per date group, so every price stays visible */}
                 <ul className="mt-5 space-y-3 sm:hidden">
                   {trip.pricingSchedule.map((row) => (
@@ -259,13 +277,13 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
                         <div>
                           <dt className="text-[10px] font-semibold tracking-[0.14em] text-muted uppercase">{t.detail.adult}</dt>
                           <dd className="mt-1 text-sm font-semibold whitespace-nowrap text-navy-900 tabular-nums">
-                            {formatNumber(row.adult, lang)} <span className="text-xs text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                            {formatNumber(row.adult, lang)} <span className="text-xs text-sun-deep">{formatCurrencyLabel(trip.currency, lang)}</span>
                           </dd>
                         </div>
                         <div>
                           <dt className="text-[10px] font-semibold tracking-[0.14em] text-muted uppercase">{t.detail.child}</dt>
                           <dd className="mt-1 text-sm font-semibold whitespace-nowrap text-navy-900 tabular-nums">
-                            {formatNumber(row.child, lang)} <span className="text-xs text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                            {formatNumber(row.child, lang)} <span className="text-xs text-sun-deep">{formatCurrencyLabel(trip.currency, lang)}</span>
                           </dd>
                         </div>
                       </dl>
@@ -298,10 +316,10 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-ink/80">{countLabel(row.nights, "night", lang)}</td>
                           <td className="px-4 py-3 text-end font-semibold whitespace-nowrap text-navy-900 tabular-nums">
-                            {formatNumber(row.adult, lang)} <span className="text-sm text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                            {formatNumber(row.adult, lang)} <span className="text-sm text-sun-deep">{formatCurrencyLabel(trip.currency, lang)}</span>
                           </td>
                           <td className="px-4 py-3 text-end font-semibold whitespace-nowrap text-navy-900 tabular-nums">
-                            {formatNumber(row.child, lang)} <span className="text-sm text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                            {formatNumber(row.child, lang)} <span className="text-sm text-sun-deep">{formatCurrencyLabel(trip.currency, lang)}</span>
                           </td>
                         </tr>
                       ))}
@@ -314,7 +332,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
             {/* Departure dates (fixed-price trips) */}
             {trip.departures && trip.departures.length > 0 && (
               <Reveal delay={0.1}>
-                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-gold uppercase">{t.trips.departures}</h3>
+                <h3 className="mt-12 text-xs font-semibold tracking-[0.2em] text-sun-deep uppercase">{t.trips.departures}</h3>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {departures.map((d) => (
                     <li key={d} className="flex items-center gap-2 rounded-md border border-line bg-white px-3.5 py-2 text-[15px] font-medium text-navy-900">
@@ -335,7 +353,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
               {trip.included.length > 0 && (
               <Reveal className="rounded-lg border border-line bg-white p-7">
                 <h3 className="flex items-center gap-2 font-semibold text-navy-900">
-                  <span className="grid size-7 place-items-center rounded-full bg-teal/15 text-teal">
+                  <span className="grid size-7 place-items-center rounded-full bg-sun/15 text-sun">
                     <Check className="size-4" strokeWidth={2.5} />
                   </span>
                   {t.detail.included}
@@ -343,7 +361,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
                 <ul className="mt-6 space-y-3.5">
                   {trip.included.map((item) => (
                     <li key={item.en} className="flex gap-3 text-[15px] leading-snug text-ink/80">
-                      <Check className="mt-0.5 size-4 shrink-0 text-teal" strokeWidth={2.2} />
+                      <Check className="mt-0.5 size-4 shrink-0 text-sun" strokeWidth={2.2} />
                       {l(item)}
                     </li>
                   ))}
@@ -398,7 +416,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
                       )}
                     >
                       <span className="leading-none">
-                        <span className={cn("block text-[9px] font-semibold tracking-[0.2em] uppercase sm:text-[10px]", i === 0 || i === trip.itinerary.length - 1 ? "text-gold" : "text-ocean")}>
+                        <span className={cn("block text-[9px] font-semibold tracking-[0.2em] uppercase sm:text-[10px]", i === 0 || i === trip.itinerary.length - 1 ? "text-sun-deep" : "text-ocean")}>
                           {t.trips.day}
                         </span>
                         <span className="mt-1 block text-lg font-semibold tabular-nums sm:text-2xl">{String(day.day).padStart(2, "0")}</span>
@@ -419,11 +437,11 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
           {has("info") && (
           <section id="info" className="scroll-mt-36">
             <DetailHeading index={num("info")} title={t.detail.info} />
-            <Reveal className="mt-8 rounded-lg border border-gold/25 bg-sand-50 p-7 sm:p-9">
+            <Reveal className="mt-8 rounded-lg border border-sun-deep/25 bg-sand-50 p-7 sm:p-9">
               <ul className="space-y-4">
                 {trip.importantInfo.map((info) => (
                   <li key={info.en} className="flex gap-3 text-[15px] leading-relaxed text-ink/80">
-                    <Info className="mt-0.5 size-4 shrink-0 text-gold" />
+                    <Info className="mt-0.5 size-4 shrink-0 text-sun-deep" />
                     {l(info)}
                   </li>
                 ))}
@@ -493,8 +511,8 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
                 <a href="#book" className="btn btn-primary mt-7 w-full py-4">
                   {t.detail.book}
                 </a>
-                <a href={chatLink(`${l(trip.title)} — ${l(trip.destination)}`).href} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light mt-3 w-full">
-                  <ChatIcon className="size-4" />
+                <a href={chatLink(`${t.detail.book}: ${l(trip.title)} — ${l(trip.destination)}`).href} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp mt-3 w-full">
+                  <WhatsAppIcon className="size-4" />
                   {t.detail.askQuestion}
                 </a>
                 {company.demoMode && <p className="mt-5 text-center text-[11px] text-white/40">{t.trips.demoNote}</p>}
@@ -506,7 +524,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
 
       {/* ---------- Book this trip ---------- */}
       <section id="book" className="relative isolate overflow-hidden bg-navy-950 py-20 sm:py-28">
-        <Image src={trip.heroImage} alt="" fill sizes="100vw" className="-z-10 object-cover opacity-25" />
+        <Image src={trip.heroImage} alt="" fill sizes="50vw" className="-z-10 object-cover opacity-25 blur-xl" />
         <div className="absolute inset-0 -z-10 bg-linear-to-b from-navy-950 via-navy-950/90 to-navy-950" />
         <div className="container-x grid gap-12 lg:grid-cols-12">
           <div className="text-white lg:col-span-4">
@@ -516,16 +534,16 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
               <p className="mt-5 text-white/65">{t.detail.bookText}</p>
               <div className="mt-8 space-y-3 border-t border-white/10 pt-8 text-sm text-white/80">
                 <p className="flex items-center gap-3">
-                  <MapPin className="size-4 text-teal" /> {l(trip.destination)}
+                  <MapPin className="size-4 text-sun" /> {l(trip.destination)}
                 </p>
                 {(trip.period || departures.length > 0) && (
                   <p className="flex items-center gap-3">
-                    <CalendarDays className="size-4 shrink-0 text-teal" /> {trip.period ? l(trip.period) : `${t.trips.departures}: ${t.trips.datesCount(departures.length)}`}
+                    <CalendarDays className="size-4 shrink-0 text-sun" /> {trip.period ? l(trip.period) : `${t.trips.departures}: ${t.trips.datesCount(departures.length)}`}
                   </p>
                 )}
                 {duration && (
                   <p className="flex items-center gap-3">
-                    <Clock3 className="size-4 text-teal" /> {duration}
+                    <Clock3 className="size-4 text-sun" /> {duration}
                   </p>
                 )}
               </div>
@@ -579,19 +597,19 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0">
                 {barPrice === undefined ? (
-                  <p className="truncate font-semibold text-navy-900">{t.trips.pricesVary}</p>
+                  <p className="truncate font-semibold text-navy-900">{hasPrice(trip) ? t.trips.pricesVary : t.trips.priceOnRequest}</p>
                 ) : (
                   <>
                     <p className="text-[10px] font-semibold tracking-[0.14em] text-muted uppercase">{singlePrice ? t.trips.pricePerPerson : t.trips.startingFrom}</p>
                     <p className="truncate font-semibold text-navy-900">
-                      <span className="text-lg tabular-nums">{formatNumber(barPrice, lang)}</span> <span className="text-sm text-gold">{formatCurrencyLabel(trip.currency, lang)}</span>
+                      <span className="text-lg tabular-nums">{formatNumber(barPrice, lang)}</span> <span className="text-sm text-sun-deep">{formatCurrencyLabel(trip.currency, lang)}</span>
                     </p>
                   </>
                 )}
               </div>
               <div className="flex items-center gap-2">
-                <a href={chatLink(l(trip.title)).href} target="_blank" rel="noopener noreferrer" aria-label={t.booking.chat} className="grid size-12 place-items-center rounded-full ring-1 ring-line text-navy-900">
-                  <ChatIcon className="size-5" />
+                <a href={chatLink(`${t.detail.book}: ${l(trip.title)}`).href} target="_blank" rel="noopener noreferrer" aria-label={t.booking.chat} className="grid size-12 place-items-center rounded-full bg-[#25D366] text-navy-950">
+                  <WhatsAppIcon className="size-5" />
                 </a>
                 <a href="#book" className="btn btn-primary py-3">
                   {t.detail.bookNow}
@@ -608,7 +626,7 @@ export function TripDetail({ trip, related }: { trip: Trip; related: Trip[] }) {
 function DetailHeading({ index, title }: { index: string; title: string }) {
   return (
     <Reveal className="flex items-baseline gap-4 border-b border-line pb-5">
-      <span className="text-sm font-semibold text-gold tabular-nums">{index}</span>
+      <span className="text-sm font-semibold text-sun-deep tabular-nums">{index}</span>
       <h2 className="text-3xl font-semibold tracking-tight text-navy-900 sm:text-4xl">{title}</h2>
     </Reveal>
   );

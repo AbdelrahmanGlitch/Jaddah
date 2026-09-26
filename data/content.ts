@@ -3,78 +3,129 @@ import { images } from "./images";
 
 /**
  * MARKETING CONTENT
- * Every "why us" point is based on information supplied by Jeddah Tourism.
- * No statistics, years of experience or customer counts are used.
+ * Services come from the Facebook page description ("شركة سياحة داخلية وحجز
+ * تذاكر طيران") and the hotel offers in the posts. No statistics, years of
+ * experience, customer counts or awards are used.
  */
 
-export type WhyUsIcon = "compass" | "clipboard" | "tag" | "headset" | "sliders" | "sparkles";
+export type ServiceId = "domestic" | "hotels" | "flights";
 
-export const whyUs: { icon: WhyUsIcon; title: Localized; text: Localized }[] = [
+export const services: {
+  id: ServiceId;
+  title: Localized;
+  text: Localized;
+  cta: Localized;
+  /** Where the CTA goes */
+  href: string;
+  /** Booking-form trip type the CTA pre-selects (when it points to the form) */
+  bookingType?: "hotel" | "flight" | "domestic";
+  image?: string;
+}[] = [
   {
-    icon: "compass",
-    title: { en: "Hajj & Umrah Programs", ar: "برامج الحج والعمرة" },
-    text: { en: "Hajj 1447 AH at Anjam Hotel on the Haram courtyard, and 15-day Umrah programs in Makkah and Madinah.", ar: "حج 1447 هـ في فندق انجم على ساحة الحرم، وبرامج عمرة 15 يومًا في مكة المكرمة والمدينة المنورة." },
+    id: "domestic",
+    title: { en: "Domestic tourism", ar: "السياحة الداخلية" },
+    text: {
+      en: "Summer stays on the sea inside Egypt — from New Alamein on the North Coast to Ain Sokhna.",
+      ar: "مصايف وإقامات على البحر جوه مصر — من العلمين الجديدة في الساحل الشمالي للعين السخنة.",
+    },
+    cta: { en: "See the offers", ar: "شوف العروض" },
+    href: "/trips",
+    image: images.gewanResort,
   },
   {
-    icon: "clipboard",
-    title: { en: "Religious Supervision", ar: "إشراف ديني" },
-    text: { en: "Our Umrah programs include religious supervision throughout the trip, plus religious visits.", ar: "تشمل برامج العمرة إشرافًا دينيًا طوال الرحلة وزيارات دينية." },
+    id: "hotels",
+    title: { en: "Hotels & resorts", ar: "الفنادق والمنتجعات" },
+    text: {
+      en: "Gewan and Dayz Inn in New Alamein, Tolip Galala Heights in Ain Sokhna — half board or full board, depending on the hotel.",
+      ar: "جيوان و Dayz Inn في العلمين الجديدة، وتوليب الجلالة هايتس في العين السخنة — هاف بورد أو فول بورد حسب الفندق.",
+    },
+    cta: { en: "Request a hotel booking", ar: "اطلب حجز فندق" },
+    href: "/#booking",
+    bookingType: "hotel",
+    image: images.tulipAquaPark,
   },
   {
-    icon: "headset",
-    title: { en: "24/7 Customer Service", ar: "خدمة عملاء على مدار الساعة" },
-    text: { en: "Umrah travelers are supported by customer service around the clock.", ar: "يحظى معتمرونا بخدمة عملاء على مدار الساعة." },
-  },
-  {
-    icon: "sliders",
-    title: { en: "Modern Transportation", ar: "وسائل انتقال حديثة" },
-    text: { en: "Modern, comfortable transportation on Umrah, and round-trip buses from Alexandria on our Rio Hotel summer trips.", ar: "وسائل انتقال حديثة ومريحة في العمرة، وأتوبيسات ذهاب وعودة من الإسكندرية في رحلات فندق ريو الصيفية." },
-  },
-  {
-    icon: "sparkles",
-    title: { en: "Summer in Marsa Matrouh", ar: "الصيف في مرسى مطروح" },
-    text: { en: "Summer 2026 trips with many departure dates and six beaches: Al-Gharram, Cleopatra, Rommel, Al-Obayed, Al-Hana and Al-Fayrouz.", ar: "رحلات صيف 2026 بمواعيد متعددة و6 شواطئ: الغرام، كليوباترا، روميل، الأبيض، الهنا، والفيروز." },
-  },
-  {
-    icon: "tag",
-    title: { en: "Clear Prices for Families", ar: "أسعار واضحة للعائلات" },
-    text: { en: "Prices per person and for children are listed on every trip — all in Egyptian Pounds.", ar: "أسعار الفرد والطفل موضحة في كل رحلة — وكلها بالجنيه المصري." },
+    id: "flights",
+    title: { en: "Flight tickets", ar: "حجز تذاكر الطيران" },
+    text: {
+      en: "Send us your destination, travel date and number of travellers, and we'll get back to you with the booking options.",
+      ar: "ابعتلنا وجهتك وتاريخ السفر وعدد المسافرين، وإحنا نرجعلك بخيارات الحجز المتاحة.",
+    },
+    cta: { en: "Book your ticket", ar: "احجز تذكرتك" },
+    href: "/#flights",
   },
 ];
 
 export const steps: { title: Localized; text: Localized }[] = [
   {
-    title: { en: "Choose Your Trip", ar: "اختر رحلتك" },
-    text: { en: "Browse trips by destination, date, budget or travel style and compare every detail.", ar: "تصفح الرحلات حسب الوجهة أو التاريخ أو الميزانية أو نوع الرحلة وقارن كل التفاصيل." },
+    title: { en: "Pick an offer", ar: "اختار العرض" },
+    text: { en: "Browse the hotel offers — or tell us where you'd like to go and when.", ar: "شوف عروض الفنادق — أو قولنا عايز تروح فين وإمتى." },
   },
   {
-    title: { en: "Contact & Confirm", ar: "تواصل وأكّد" },
-    text: { en: "Send a booking request or message us — we confirm availability, price and payment.", ar: "أرسل طلب حجز أو راسلنا، وسنؤكد لك التوافر والسعر وطريقة الدفع." },
+    title: { en: "Call or WhatsApp", ar: "كلمنا أو ابعت واتساب" },
+    text: { en: "On any of our booking lines, or send the booking request from this website.", ar: "على أي رقم من أرقام الحجز، أو ابعت طلب الحجز من الموقع." },
   },
   {
-    title: { en: "Prepare For Your Journey", ar: "استعد لرحلتك" },
-    text: { en: "Get the final details of your trip and everything you need to know before you go.", ar: "احصل على التفاصيل النهائية لرحلتك وكل ما تحتاج معرفته قبل الانطلاق." },
+    title: { en: "Confirm & pay", ar: "أكد الحجز وادفع" },
+    text: {
+      en: "We confirm the details and price with you. Pay by bank transfer, Vodafone Cash, InstaPay or valU installments.",
+      ar: "بنأكد معاك التفاصيل والسعر، وتدفع تحويل بنكي أو فودافون كاش أو إنستاباي أو تقسيط valU.",
+    },
   },
   {
-    title: { en: "Enjoy The Experience", ar: "استمتع بالتجربة" },
-    text: { en: "Travel with confidence while our team takes care of the details along the way.", ar: "سافر بثقة بينما يهتم فريقنا بالتفاصيل طوال الطريق." },
+    title: { en: "Enjoy your trip", ar: "استمتع برحلتك" },
+    text: { en: "Pack your bag — the sea is waiting.", ar: "جهّز شنطتك… والبحر مستنيك." },
   },
 ];
 
 /**
- * SOCIAL FEED PREVIEW
- * Illustrates how Facebook posts could appear on the website. Photos are
- * placeholders — replace with real post photos/captions from
- * https://www.facebook.com/JeddahTourism196/photos
+ * FACEBOOK POSTS — the latest posts on facebook.com/LAVIE55555
+ * (text shortened from the original; dates are the post dates).
+ * Facebook doesn't expose post permalinks publicly, so each card links to the page.
  */
-export const socialPosts: { image: string; caption: Localized }[] = [
-  { image: images.matrouhAgibaFlowers, caption: { en: "Summer 2026 in Marsa Matrouh", ar: "صيف 2026 في مرسى مطروح" } },
-  { image: images.makkahKaabaDay, caption: { en: "Hajj 1447 AH", ar: "الحج 1447 هـ" } },
-  { image: images.matrouhAgibaSwimmers, caption: { en: "Summer coastal trips", ar: "رحلات صيفية" } },
-  { image: images.madinahDomeMinaret, caption: { en: "Umrah Programs", ar: "برامج العمرة" } },
-  { image: images.matrouhObayed, caption: { en: "Al-Obayed Beach, Marsa Matrouh", ar: "شاطئ الأبيض، مرسى مطروح" } },
-  { image: images.makkahClockTower, caption: { en: "Religious Tourism", ar: "السياحة الدينية" } },
-  { image: images.matrouhCleopatraRock, caption: { en: "Cleopatra Beach, Marsa Matrouh", ar: "شاطئ كليوباترا، مرسى مطروح" } },
-  { image: images.delmarCafeView, caption: { en: "Delmar Hotel — Marsa Matrouh", ar: "فندق دليمار - مرسى مطروح" } },
-  { image: images.matrouhCleopatraClear, caption: { en: "Summer by the sea", ar: "صيف على البحر" } },
+export const facebookPosts: {
+  date: string;
+  kind: Localized;
+  text: Localized;
+  image?: string;
+  tripId?: string;
+}[] = [
+  {
+    date: "2026-07-15",
+    kind: { en: "Album · 14 photos", ar: "ألبوم · 14 صورة" },
+    text: {
+      en: "Dayz Inn El Alamein — exclusive summer 2026. Your room at the beach: a prime spot in front of the Alamein Towers, all rooms sea view.",
+      ar: "Dayz Inn العلمين — صيف 2026 حصري، أوضتك على البحر: موقع مميز أمام أبراج العلمين، وكل الغرف سي فيو.",
+    },
+    image: images.dayzCourtyardNight,
+    tripId: "dayz-inn-alamein",
+  },
+  {
+    date: "2026-07-07",
+    kind: { en: "Contest", ar: "مسابقة" },
+    text: {
+      en: "Predict the Egypt vs Argentina match: a free two-night room at Tolip Galala Hills, Ain Sokhna, for the first correct prediction. Terms & conditions apply.",
+      ar: "يلا بينا نتوقع ماتش مصر والأرجنتين — صاحب أول توقع صحيح له غرفة فري لمدة ليلتين في توليب الجلالة هيلز العين السخنة. تطبق الشروط والأحكام.",
+    },
+  },
+  {
+    date: "2026-06-08",
+    kind: { en: "Video", ar: "فيديو" },
+    text: {
+      en: "Tolip Galala Heights (Aqua Park) — all rooms pool view, one of the newest hotels in Ain Sokhna. Half board, full board available.",
+      ar: "توليب الجلالة هايتس (أكوا بارك) — جميع الغرف بوول فيو، من أحدث فنادق العين السخنة. هاف بورد، ومتاح فول بورد.",
+    },
+    image: images.tulipAquaPark,
+    tripId: "tolip-galala-heights-sokhna",
+  },
+  {
+    date: "2026-06-08",
+    kind: { en: "Video", ar: "فيديو" },
+    text: {
+      en: "A different summer in New Alamein — choose between Gewan Resort Aqua Park and Gewan White Beach, 5-star ultra deluxe, first row on the sea.",
+      ar: "تجربة صيف مختلفة في العلمين الجديدة — اختار بين جيوان ريزورت أكوا بارك وجيوان وايت بيتش، 5 نجوم ألترا ديلوكس صف أول على البحر.",
+    },
+    image: images.gewanPool,
+    tripId: "gewan-new-alamein",
+  },
 ];

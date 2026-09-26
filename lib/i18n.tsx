@@ -4,14 +4,15 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExte
 import { dictionaries, type Dictionary } from "./dictionary";
 import type { Lang, Localized } from "./types";
 
-const STORAGE_KEY = "jt-lang";
-const EVENT = "jt-lang-change";
+const STORAGE_KEY = "lavie-lang";
+const EVENT = "lavie-lang-change";
 
+/** Arabic is the site's primary language; English only when the visitor switches. */
 function readLang(): Lang {
   try {
-    return window.localStorage.getItem(STORAGE_KEY) === "ar" ? "ar" : "en";
+    return window.localStorage.getItem(STORAGE_KEY) === "en" ? "en" : "ar";
   } catch {
-    return "en";
+    return "ar";
   }
 }
 
@@ -38,7 +39,7 @@ type LangContextValue = {
 const LangContext = createContext<LangContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const lang = useSyncExternalStore<Lang>(subscribe, readLang, () => "en");
+  const lang = useSyncExternalStore<Lang>(subscribe, readLang, () => "ar");
 
   const setLang = useCallback((next: Lang) => {
     try {

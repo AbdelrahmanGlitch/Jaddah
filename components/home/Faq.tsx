@@ -6,6 +6,7 @@ import { faqs } from "@/data/faqs";
 import { chatLink } from "@/data/company";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Accordion } from "@/components/ui/Accordion";
+import { WhatsAppIcon } from "@/components/ui/BrandIcons";
 import { Reveal } from "@/components/ui/Reveal";
 
 export function Faq() {
@@ -18,7 +19,8 @@ export function Faq() {
           <div className="lg:sticky lg:top-32">
             <SectionHeading eyebrow={t.faq.eyebrow} title={t.faq.title} text={t.faq.text} />
             <Reveal delay={0.1}>
-              <a href={chatLink().href} target="_blank" rel="noopener noreferrer" className="btn btn-outline mt-8">
+              <a href={chatLink().href} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp mt-8">
+                <WhatsAppIcon className="size-4" />
                 {t.faq.ask}
                 <ArrowUpRight className="size-4 rtl:-scale-x-100" />
               </a>

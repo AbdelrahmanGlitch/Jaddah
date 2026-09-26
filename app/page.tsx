@@ -1,9 +1,9 @@
 import { Hero } from "@/components/home/Hero";
-import { TripFinder } from "@/components/home/TripFinder";
 import { Intro } from "@/components/home/Intro";
+import { Services } from "@/components/home/Services";
 import { FeaturedTrips } from "@/components/home/FeaturedTrips";
 import { Destinations } from "@/components/home/Destinations";
-import { WhyUs } from "@/components/home/WhyUs";
+import { Flights } from "@/components/home/Flights";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { SocialFeed } from "@/components/home/SocialFeed";
 import { Gallery } from "@/components/home/Gallery";
@@ -16,11 +16,11 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <TripFinder />
       <Intro />
+      <Services />
       <FeaturedTrips />
       <Destinations />
-      <WhyUs />
+      <Flights />
       <HowItWorks />
       <SocialFeed />
       <Gallery />

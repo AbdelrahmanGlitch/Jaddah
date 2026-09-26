@@ -2,21 +2,25 @@
 
 /* ---------- Brand tokens ---------- */
 @theme {
-  --color-navy-950: #071526;
-  --color-navy-900: #0b1f33;
-  --color-navy-800: #123b5d;
-  --color-ocean: #0e7490;
-  --color-teal: #14b8a6;
-  --color-sand: #f3e7d3;
-  --color-sand-50: #faf5ec;
-  --color-mist: #f8fafc;
-  --color-ink: #102033;
-  --color-muted: #64748b;
-  --color-gold: #d4a72c;
-  --color-line: #e2e8f0;
+  /* LAVIE TOURS palette — sampled from the company logo (sea, sky wave, sun, sand) */
+  --color-navy-950: #0c2130;
+  --color-navy-900: #123247;
+  --color-navy-800: #2b5877;
+  --color-slate-brand: #5a86a1;
+  --color-ocean: #1d78b8;
+  --color-wave: #46a2e3;
+  --color-sun: #f9a826;
+  --color-sun-deep: #d9860f;
+  --color-sand: #f3dcbd;
+  --color-sand-50: #fcf6ec;
+  --color-mist: #f4f8fb;
+  --color-ink: #13293a;
+  --color-muted: #5b7082;
+  --color-line: #dbe5ed;
 
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-arabic: var(--font-plex-arabic), var(--font-manrope), ui-sans-serif, sans-serif;
+  --font-display: var(--font-alexandria), var(--font-plex-arabic), var(--font-manrope), ui-sans-serif, sans-serif;
 
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -56,6 +60,13 @@ html[lang="ar"] body {
   font-family: var(--font-arabic);
 }
 
+/* Display face for headings (Arabic + Latin) */
+h1,
+h2,
+.font-display {
+  font-family: var(--font-display);
+}
+
 /* Letter-spacing breaks Arabic letter joining — neutralize it in RTL. */
 html[dir="rtl"] *:not([dir="ltr"], [dir="ltr"] *) {
   letter-spacing: 0 !important;
@@ -70,23 +81,26 @@ section[id],
 }
 
 ::selection {
-  background: var(--color-teal);
+  background: var(--color-wave);
   color: white;
 }
 
 @layer components {
   /* Buttons */
   .btn {
-    @apply inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide whitespace-nowrap transition-all duration-300 ease-(--ease-premium) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal disabled:pointer-events-none disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-sm font-semibold tracking-wide whitespace-nowrap transition-all duration-300 ease-(--ease-premium) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sun disabled:pointer-events-none disabled:opacity-60;
   }
   .btn-primary {
-    @apply bg-teal text-navy-950 shadow-[0_10px_30px_-10px_rgba(20,184,166,0.7)] hover:-translate-y-0.5 hover:bg-[#2dd4bf] hover:shadow-[0_16px_40px_-12px_rgba(20,184,166,0.8)];
+    @apply bg-sun text-navy-950 shadow-[0_10px_30px_-10px_rgba(249,168,38,0.7)] hover:-translate-y-0.5 hover:bg-[#fbb846] hover:shadow-[0_16px_40px_-12px_rgba(249,168,38,0.8)];
   }
   .btn-dark {
     @apply bg-navy-900 text-white hover:-translate-y-0.5 hover:bg-navy-800 hover:shadow-[0_16px_40px_-16px_rgba(11,31,51,0.6)];
   }
   .btn-ghost-light {
     @apply border border-white/35 bg-white/5 text-white backdrop-blur-md hover:border-white/70 hover:bg-white/15;
+  }
+  .btn-whatsapp {
+    @apply bg-[#25D366] text-navy-950 hover:-translate-y-0.5 hover:bg-[#3be07a] hover:shadow-[0_16px_40px_-14px_rgba(37,211,102,0.7)];
   }
   .btn-outline {
     @apply border border-navy-900/15 text-navy-900 hover:border-navy-900 hover:bg-navy-900 hover:text-white;
@@ -97,7 +111,7 @@ section[id],
   }
   .eyebrow::before {
     content: "";
-    @apply h-px w-8 bg-gold;
+    @apply h-px w-8 bg-sun-deep;
   }
 
   .heading-xl {

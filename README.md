@@ -1,7 +1,7 @@
-# Jeddah Tourism — Website Concept (Frontend Demo)
+# LAVIE TOURS — لافي تورز
 
-A premium, bilingual (English / العربية, full RTL) travel website prototype for **Jeddah Tourism**.
-Frontend only: no backend, API routes, database or real booking. The booking form shows a simulated success state.
+Arabic-first (full RTL, with an English toggle) website for **LAVIE TOURS**, an Egyptian travel company for domestic tourism and flight tickets.
+Frontend only: no backend. The booking form opens WhatsApp to Lavie's booking line with the request written out.
 
 ```bash
 npm install
@@ -11,26 +11,28 @@ npm run dev     # http://localhost:3000
 Stack: Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · Framer Motion · Lucide React
 
 ## Pages
-- `/` — Hero, trip finder, about, featured trips, destinations, why us, how it works, social feed, gallery, booking, FAQ, contact
-- `/trips` — full catalog with filters (destination, duration, price, trip type, departure month, sort). Filters are reflected in the URL (e.g. `/trips?type=beach`)
-- `/trips/[id]` — trip detail: gallery, key facts, overview, included/excluded, itinerary timeline, important info, FAQ, booking form, related trips
+- `/`: hero, about, services, hotel offers, destinations, flight tickets, how to book, Facebook posts, gallery, booking request, FAQ, contact
+- `/trips`: every offer, filterable by destination and type (price, duration and date filters appear automatically once offers carry that data)
+- `/trips/[id]`: offer detail with photos, highlights, board basis, the source Facebook post date, and a booking form
 
-## Company & trip data (everything lives in `/data`)
-Company details and the five offers (Hajj 1447 AH, Umrah Programs, Rio Hotel, New Royal Palace Hotel, Delmar Hotel) are **verified data supplied by Jeddah Tourism**. Only information that was supplied is shown — sections without data (e.g. itineraries, trip FAQs, availability) are hidden automatically.
+## Where the content comes from
+Everything company-specific comes from the official Facebook page **https://www.facebook.com/LAVIE55555** (page info plus posts from 17 May to 15 Jul 2026, checked 26 Sep 2026). No statistics, reviews, awards, years or customer counts are used.
 
 | File | What it holds |
 | --- | --- |
-| `data/company.ts` | Arabic/English names, phone numbers, Alexandria branch, Facebook links. `WHATSAPP_NUMBER` / `EMAIL_ADDRESS` / `INSTAGRAM_URL` are still placeholders and stay hidden until filled in |
-| `data/trips.ts` | The five offers. Departure dates are `"MM-DD"` (no year is shown unless supplied). Fixed prices go in `priceOptions`; date-based prices (Delmar) in `pricingSchedule` |
-| `data/destinations.ts` | Makkah & Madinah, Marsa Matrouh |
-| `data/faqs.ts` | General FAQ (answers based on supplied data only) |
-| `data/content.ts` | Why-us points (from supplied data), how-it-works steps, social feed |
-| `data/gallery.ts` | Gallery photos |
-| `data/images.ts` | **Every image URL in one place**. Photos are still placeholders — put real photos in `/public/images/` and set e.g. `"/images/rio-01.jpg"` |
-| `lib/dictionary.ts` | All UI text in English and Arabic |
+| `data/company.ts` | Name, logo, Facebook, booking lines, page phone, offices (Cairo, Kafr El Sheikh), payment methods. The header comment lists what is verified and what **still needs confirmation** |
+| `data/trips.ts` | The three hotel offers (Dayz Inn Alamein, Tolip Galala Heights, Gewan). The posts give no prices or dates, so the site shows "السعر عند الاستعلام" |
+| `data/destinations.ts` | New Alamein and Ain Sokhna, the only destinations in Lavie's offers |
+| `data/content.ts` | Services, booking steps, and the latest Facebook posts |
+| `data/faqs.ts` | FAQ answered only from published information |
+| `data/gallery.ts` / `data/images.ts` | Photos from Lavie's own posts, in `/public/images/lavie/` |
+| `lib/dictionary.ts` | All UI text in Arabic and English |
 
-Notes:
-- No number has been designated as WhatsApp, so chat buttons open Facebook Messenger (`m.me/JeddahTourism196`). Set `whatsapp` in `data/company.ts` and they switch to WhatsApp automatically.
-- Photos are royalty-free Unsplash placeholders, not Jeddah Tourism photos.
-- Trip categories shown in filters are generated from the trips that exist.
-"# Jaddah" 
+## Before going live, confirm with LAVIE TOURS
+- **Photos:** Facebook only exposes small previews, so the Dayz Inn photos are 250–390 px wide. Replace the files in `/public/images/lavie/` with the originals (same names).
+- **Cairo office floor:** posts say both the 12th and the 13th floor, so the floor isn't shown.
+- **Hotel name:** the offer post says "توليب الجلالة هايتس" and a promo design says "Tolip Resort 71 Galala Hills". Confirm the exact English name.
+- **WhatsApp number:** chat buttons use 01009316766 (the first booking line; every post says the lines take calls and WhatsApp).
+- **Not shown until confirmed:** email `reservation@lavietours-eg.com`, phone 01277778973, the New Nozha address, Hajj & Umrah, organized group trips, and international trips.
+- **Offers:** add prices, dates and new offers to `data/trips.ts` as Lavie publishes them. The Dayz Inn offer is marked "Summer 2026".
+"# Lavie" 

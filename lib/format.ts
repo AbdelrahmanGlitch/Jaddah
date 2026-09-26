@@ -13,8 +13,9 @@ export function formatNumber(value: number, lang: Lang) {
   return new Intl.NumberFormat(locale(lang)).format(value);
 }
 
-export function formatCurrencyLabel(currency: Currency, lang: Lang) {
-  return currencyLabel[currency][lang];
+/** Prices are in Egyptian pounds unless a trip says otherwise. */
+export function formatCurrencyLabel(currency: Currency | undefined, lang: Lang) {
+  return currencyLabel[currency ?? "EGP"][lang];
 }
 
 /** Parse YYYY-MM-DD as a local calendar date (avoids timezone shifts). */

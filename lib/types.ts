@@ -4,6 +4,7 @@ export type Lang = "en" | "ar";
 export type Localized = { en: string; ar: string };
 
 export type TripCategory =
+  | "hotel"
   | "beach"
   | "family"
   | "adventure"
@@ -43,7 +44,7 @@ export interface PriceOption {
   note?: Localized;
 }
 
-/** One row of a date-based price table (e.g. Delmar Hotel) */
+/** One row of a date-based price table */
 export interface ScheduleRow {
   dates: MonthDay[];
   nights: number;
@@ -55,14 +56,16 @@ export interface Trip {
   /** URL slug — /trips/{id} */
   id: string;
   title: Localized;
-  /** City / area, e.g. "Marsa Matrouh" */
+  /** City / area, e.g. "New Alamein" */
   destination: Localized;
   /** Must match an id in data/destinations.ts */
   destinationId: string;
   country: Localized;
   categories: TripCategory[];
-  /** e.g. "Summer 2026" */
+  /** e.g. "Summer 2026" — shown as a seasonal/dated offer badge */
   season?: Localized;
+  /** Date of the Facebook post the offer was taken from (YYYY-MM-DD) */
+  postedOn?: string;
   /** e.g. "Tahseen" */
   program?: Localized;
   /** Free-text period, e.g. "From 2 to 19 Dhu al-Hijjah" */
@@ -76,7 +79,8 @@ export interface Trip {
   /** Departure dates ("MM-DD"). For trips with a pricingSchedule, dates come from the schedule. */
   departures?: MonthDay[];
   departureCity?: Localized;
-  currency: Currency;
+  /** Only needed when a price is supplied */
+  currency?: Currency;
   /** Fixed prices (per person / child). Leave empty when pricingSchedule is used. */
   priceOptions?: PriceOption[];
   /** Date-based prices — when present, no single fixed price is displayed. */
@@ -99,6 +103,8 @@ export interface Destination {
   country: Localized;
   tagline: Localized;
   image: string;
+  /** CSS object-position for the photo crop, e.g. "50% 70%" */
+  imagePosition?: string;
   scope: "domestic" | "international";
 }
 

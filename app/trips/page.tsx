@@ -5,8 +5,8 @@ import { CATEGORY_ORDER, type TripFilters } from "@/lib/trip-filters";
 import type { TripCategory } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Trips",
-  description: "Browse every Jeddah Tourism trip — filter by destination, duration, price, trip type and departure date.",
+  title: "العروض",
+  description: "عروض فنادق ومنتجعات LAVIE TOURS في العلمين الجديدة والعين السخنة — للحجز والاستعلام اتصال أو واتساب.",
 };
 
 const pick = <T extends string>(value: string | string[] | undefined, allowed?: readonly T[]): T | undefined => {

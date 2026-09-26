@@ -10,11 +10,11 @@ export function ListingHero() {
   return (
     <section className="relative isolate overflow-hidden bg-navy-950 pt-40 pb-20 text-white sm:pt-48 sm:pb-28">
       <motion.div className="absolute inset-0 -z-10" initial={{ scale: 1.1 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease: [0.22, 1, 0.36, 1] }}>
-        <Image src={images.matrouhRockySea} alt="" fill preload sizes="100vw" className="object-cover" />
+        <Image src={images.gewanResort} alt="" fill preload sizes="100vw" className="object-cover" />
       </motion.div>
       <div className="absolute inset-0 -z-10 bg-linear-to-t from-navy-950 via-navy-950/60 to-navy-950/40" />
       <div className="container-x">
-        <motion.span initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="eyebrow text-sand">
+        <motion.span initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="eyebrow text-sun">
           {t.listing.eyebrow}
         </motion.span>
         <motion.h1

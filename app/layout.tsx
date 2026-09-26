@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans_Arabic, Manrope } from "next/font/google";
+import { Alexandria, IBM_Plex_Sans_Arabic, Manrope } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/lib/i18n";
 import { Navbar } from "@/components/layout/Navbar";
@@ -17,26 +17,31 @@ const plexArabic = IBM_Plex_Sans_Arabic({
   weight: ["300", "400", "500", "600", "700"],
 });
 
+/** Display face for headings — Arabic + Latin */
+const alexandria = Alexandria({
+  variable: "--font-alexandria",
+  subsets: ["arabic", "latin"],
+});
+
 export const metadata: Metadata = {
   title: {
-    default: `${company.name} — Your Journey Starts Here`,
+    default: `${company.name} | لافي تورز — سياحة داخلية وحجز تذاكر طيران`,
     template: `%s · ${company.name}`,
   },
-  description:
-    "Discover unforgettable destinations, carefully planned journeys, and experiences worth remembering with Jeddah Tourism.",
+  description: "LAVIE TOURS — شركة سياحة داخلية وحجز تذاكر طيران من القاهرة. عروض فنادق ومنتجعات في العلمين الجديدة والعين السخنة. للحجز والاستعلام اتصال أو واتساب.",
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B1F33",
+  themeColor: "#123247",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
-      dir="ltr"
+      lang="ar"
+      dir="rtl"
       data-scroll-behavior="smooth"
-      className={`${manrope.variable} ${plexArabic.variable} antialiased`}
+      className={`${manrope.variable} ${plexArabic.variable} ${alexandria.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-screen overflow-x-clip">

@@ -7,6 +7,8 @@ import { Expand } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
 import { gallery } from "@/data/gallery";
+import { company } from "@/data/company";
+import { FacebookIcon } from "@/components/ui/BrandIcons";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Lightbox } from "@/components/ui/Lightbox";
 
@@ -21,10 +23,13 @@ export function Gallery() {
       <div className="container-x relative">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <SectionHeading tone="dark" eyebrow={t.gallery.eyebrow} title={t.gallery.title} text={t.gallery.text} />
-          <p className="text-xs tracking-[0.2em] text-white/40 uppercase">{t.gallery.note}</p>
+          <a href={company.facebook.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-xs tracking-[0.12em] text-white/55 transition hover:text-white">
+            <FacebookIcon className="size-4" />
+            {t.gallery.note}
+          </a>
         </div>
 
-        <div className="mt-14 columns-2 gap-3 sm:gap-4 lg:columns-3 xl:columns-4">
+        <div className="mt-14 columns-2 gap-3 sm:gap-4 lg:columns-3">
           {gallery.map((item, i) => (
             <motion.button
               key={item.src}
@@ -37,7 +42,7 @@ export function Gallery() {
               className={cn("group relative mb-3 block w-full break-inside-avoid overflow-hidden rounded-md sm:mb-4", aspect[item.shape])}
               aria-label={l(item.alt)}
             >
-              <Image src={item.src} alt={l(item.alt)} fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover transition-transform duration-[1.6s] ease-(--ease-premium) group-hover:scale-105" />
+              <Image src={item.src} alt={l(item.alt)} fill sizes="(max-width: 1024px) 50vw, 33vw" className="object-cover transition-transform duration-[1.6s] ease-(--ease-premium) group-hover:scale-105" />
               <div className="absolute inset-0 bg-navy-950/0 transition-colors duration-500 group-hover:bg-navy-950/40" />
               <span className="absolute start-3 bottom-3 rounded-full bg-navy-950/50 px-3 py-1 text-[10.5px] font-semibold tracking-[0.14em] text-white uppercase ring-1 ring-white/15 backdrop-blur-md">
                 {l(item.category)}

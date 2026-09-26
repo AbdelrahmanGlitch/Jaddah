@@ -1,50 +1,50 @@
 import type { FaqItem } from "@/lib/types";
 
 /**
- * GENERAL FAQ — answers use only information supplied by Jeddah Tourism
- * (or describe how this website works). Add verified policies here.
+ * GENERAL FAQ — answers use only information published by LAVIE TOURS
+ * on facebook.com/LAVIE55555 (or describe how this website works).
  */
 export const faqs: FaqItem[] = [
   {
-    question: { en: "How do I book a trip?", ar: "كيف أحجز رحلة؟" },
+    question: { en: "How do I book?", ar: "أحجز إزاي؟" },
     answer: {
-      en: "Choose a trip, open its page and press “Book This Trip”, or fill in the booking request form. You can also call us on any of our numbers or message us on Facebook.",
-      ar: "اختر رحلتك وافتح صفحتها واضغط «احجز هذه الرحلة»، أو املأ نموذج طلب الحجز. ويمكنك أيضًا الاتصال بنا على أي من أرقامنا أو مراسلتنا على فيسبوك.",
+      en: "Call or WhatsApp any of our booking lines — 01009316766, 01003293097, 01001523504 or 01009065570 — or fill in the booking request on this page and send it to us on WhatsApp.",
+      ar: "اتصل أو ابعت واتساب على أي رقم من أرقام الحجز: 01009316766 أو 01003293097 أو 01001523504 أو 01009065570 — أو املا طلب الحجز في الموقع وابعته لنا على واتساب.",
     },
   },
   {
-    question: { en: "What is included in the package?", ar: "ماذا تشمل الباقة؟" },
+    question: { en: "How can I pay?", ar: "طرق الدفع إيه؟" },
     answer: {
-      en: "Every trip page lists what is included — hotels, meals, transportation and beaches, depending on the trip.",
-      ar: "توضح صفحة كل رحلة ما تشمله الباقة، مثل الفنادق والوجبات والانتقالات والشواطئ حسب الرحلة.",
+      en: "By transfer to one of our bank accounts, Vodafone Cash or InstaPay — and installments are available through valU.",
+      ar: "تحويل على أحد حساباتنا في البنك، أو فودافون كاش، أو إنستاباي — ومتاح التقسيط عن طريق valU.",
     },
   },
   {
-    question: { en: "Is the flight ticket included in the Hajj price?", ar: "هل سعر الحج شامل تذكرة الطيران؟" },
+    question: { en: "Why aren't prices listed on the website?", ar: "ليه الأسعار مش مكتوبة على الموقع؟" },
     answer: {
-      en: "No. The Hajj 1447 AH price (267,000 EGP per person) does not include the flight ticket.",
-      ar: "لا، سعر الحج 1447 هـ (267,000 جنيه للفرد) غير شامل تذكرة الطيران.",
+      en: "Our published offers don't carry fixed prices, so we confirm the current price and availability with you when you ask.",
+      ar: "عروضنا المنشورة مفيهاش أسعار ثابتة، فبنأكد معاك السعر والأماكن المتاحة وقت الاستعلام.",
     },
   },
   {
-    question: { en: "Are there prices for children on summer trips?", ar: "هل توجد أسعار للأطفال في الرحلات الصيفية؟" },
+    question: { en: "Do you book flight tickets?", ar: "بتحجزوا تذاكر طيران؟" },
     answer: {
-      en: "Yes. Each Marsa Matrouh trip lists its child price. On Rio Hotel and New Royal Palace Hotel trips, children under 6 are free, and an extra bus seat costs 800 EGP.",
-      ar: "نعم، توضح كل رحلة إلى مرسى مطروح سعر الطفل. وفي رحلات فندق ريو وفندق نيو رويال بالاس، الأطفال أقل من 6 سنوات مجانًا، وكرسي الأتوبيس الإضافي بـ 800 جنيه.",
+      en: "Yes. Send us your destination, travel date and number of travellers and we'll get back to you with the options.",
+      ar: "أيوه. ابعتلنا وجهتك وتاريخ السفر وعدد المسافرين، وهنرجعلك بخيارات الحجز.",
     },
   },
   {
-    question: { en: "How can I contact you?", ar: "كيف يمكنني التواصل معكم؟" },
+    question: { en: "What board basis do the hotels have?", ar: "نظام الإقامة في الفنادق إيه؟" },
     answer: {
-      en: "Call us on 01223374023, 01055590351, 034333455, 01015202257, 01024941073 or 01553471642, message us on Facebook, or visit our Alexandria branch in Al-Agamy, Al-Bitash.",
-      ar: "اتصل بنا على 01223374023 أو 01055590351 أو 034333455 أو 01015202257 أو 01024941073 أو 01553471642، أو راسلنا على فيسبوك، أو زر فرعنا بالإسكندرية في العجمي، البيطاش.",
+      en: "It depends on the hotel: Gewan is half board (open-buffet breakfast and dinner); Tolip Galala Heights is half board, with full board available at an extra charge. Each offer page lists what's included.",
+      ar: "حسب الفندق: جيوان هاف بورد (فطار وعشاء أوبن بوفيه)، وتوليب الجلالة هايتس هاف بورد ومتاح فول بورد بتكلفة إضافية. صفحة كل عرض فيها كل التفاصيل.",
     },
   },
   {
-    question: { en: "What happens after I submit a booking request?", ar: "ماذا يحدث بعد إرسال طلب الحجز؟" },
+    question: { en: "Where are your offices?", ar: "مقر الشركة فين؟" },
     answer: {
-      en: "Our team reviews your request and contacts you to confirm the trip details.",
-      ar: "يراجع فريقنا طلبك ويتواصل معك لتأكيد تفاصيل الرحلة.",
+      en: "Cairo: 28 El Obour Buildings, Salah Salem Street. Kafr El Sheikh: 47 Street, Al-Raeesi Building, in front of Sharabi Center.",
+      ar: "القاهرة: ٢٨ عمارات العبور، شارع صلاح سالم. كفر الشيخ: شارع ٤٧، عمارة الرئيسي، أمام مركز شرابي.",
     },
   },
 ];

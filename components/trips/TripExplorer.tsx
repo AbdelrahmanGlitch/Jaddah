@@ -5,7 +5,7 @@ import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { Info, RotateCcw, SearchX, SlidersHorizontal, X } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
-import { trips } from "@/data/trips";
+import { lowestAdultPrice, trips } from "@/data/trips";
 import { destinations } from "@/data/destinations";
 import { company } from "@/data/company";
 import { formatMonthName } from "@/lib/format";
@@ -20,6 +20,10 @@ export function TripExplorer({ initial }: { initial: Partial<TripFilters> }) {
   const categories = useMemo(() => availableCategories(), []);
   const destinationOptions = useMemo(() => destinations.filter((d) => trips.some((tr) => tr.destinationId === d.id)), []);
   const months = useMemo(() => departureMonths(), []);
+  // Only offer filters the data can answer (Lavie's posts have no prices, durations or dates yet).
+  const hasDurations = useMemo(() => trips.some((tr) => tr.durationDays !== undefined), []);
+  const hasPrices = useMemo(() => trips.some((tr) => lowestAdultPrice(tr) !== undefined), []);
+  const canSort = hasPrices || months.length > 0;
   const results = useMemo(() => applyFilters([...trips], filters), [filters]);
   const activeCount = activeFilterCount(filters);
 
@@ -46,12 +50,30 @@ export function TripExplorer({ initial }: { initial: Partial<TripFilters> }) {
     <>
       <FilterSelect label={t.listing.destination} value={filters.destination} onChange={(v) => update("destination", v)} any={t.listing.any}
         options={destinationOptions.map((d) => ({ value: d.id, label: l(d.name) }))} />
-      <FilterSelect label={t.listing.duration} value={filters.duration} onChange={(v) => update("duration", v as TripFilters["duration"])} any={t.listing.any}
-        options={(["short", "medium", "long"] as const).map((d) => ({ value: d, label: t.listing.durations[d] }))} />
-      <FilterSelect label={`${t.listing.price} (EGP)`} value={filters.price} onChange={(v) => update("price", v as TripFilters["price"])} any={t.listing.any}
-        options={(["budget", "mid", "premium"] as const).map((p) => ({ value: p, label: t.listing.prices[p] }))} />
-      <FilterSelect label={t.listing.month} value={filters.month} onChange={(v) => update("month", v)} any={t.listing.any}
-        options={months.map((m) => ({ value: m, label: formatMonthName(m, lang) }))} />
+      {hasDurations && (
+        <FilterSelect label={t.listing.duration} value={filters.duration} onChange={(v) => update("duration", v as TripFilters["duration"])} any={t.listing.any}
+          options={(["short", "medium", "long"] as const).map((d) => ({ value: d, label: t.listing.durations[d] }))} />
+      )}
+      {hasPrices && (
+        <FilterSelect label={`${t.listing.price} (EGP)`} value={filters.price} onChange={(v) => update("price", v as TripFilters["price"])} any={t.listing.any}
+          options={(["budget", "mid", "premium"] as const).map((p) => ({ value: p, label: t.listing.prices[p] }))} />
+      )}
+      {months.length > 0 && (
+        <FilterSelect label={t.listing.month} value={filters.month} onChange={(v) => update("month", v)} any={t.listing.any}
+          options={months.map((m) => ({ value: m, label: formatMonthName(m, lang) }))} />
+      )}
+      {canSort && (
+        <FilterSelect label={t.listing.sort} value={filters.sort} onChange={(v) => update("sort", v as TripFilters["sort"])}
+          options={[
+            { value: "soonest", label: t.listing.sortSoonest },
+            ...(hasPrices
+              ? [
+                  { value: "priceLow", label: t.listing.sortPriceLow },
+                  { value: "priceHigh", label: t.listing.sortPriceHigh },
+                ]
+              : []),
+          ]} />
+      )}
     </>
   );
 
@@ -89,19 +111,11 @@ export function TripExplorer({ initial }: { initial: Partial<TripFilters> }) {
           >
             <SlidersHorizontal className="size-4" />
             {t.listing.filters}
-            {activeCount > 0 && <span className="grid size-5 place-items-center rounded-full bg-teal text-[11px] text-navy-950">{activeCount}</span>}
+            {activeCount > 0 && <span className="grid size-5 place-items-center rounded-full bg-sun text-[11px] text-navy-950">{activeCount}</span>}
           </button>
         </div>
 
-        <div className="mt-4 hidden grid-cols-[repeat(4,1fr)_auto] items-end gap-3 lg:grid">
-          {selects}
-          <FilterSelect label={t.listing.sort} value={filters.sort} onChange={(v) => update("sort", v as TripFilters["sort"])}
-            options={[
-              { value: "soonest", label: t.listing.sortSoonest },
-              { value: "priceLow", label: t.listing.sortPriceLow },
-              { value: "priceHigh", label: t.listing.sortPriceHigh },
-            ]} />
-        </div>
+        <div className="mt-4 hidden grid-cols-4 items-end gap-3 lg:grid">{selects}</div>
       </div>
 
       {/* Results header */}
@@ -114,7 +128,7 @@ export function TripExplorer({ initial }: { initial: Partial<TripFilters> }) {
         <div className="flex items-center gap-4">
           {company.demoMode && (
             <p className="hidden items-center gap-2 text-xs text-muted sm:flex">
-              <Info className="size-3.5 text-gold" />
+              <Info className="size-3.5 text-sun-deep" />
               {t.trips.demoNote}
             </p>
           )}
@@ -183,15 +197,7 @@ export function TripExplorer({ initial }: { initial: Partial<TripFilters> }) {
                   <X className="size-4" />
                 </button>
               </div>
-              <div className="mt-6 grid gap-4">
-                {selects}
-                <FilterSelect label={t.listing.sort} value={filters.sort} onChange={(v) => update("sort", v as TripFilters["sort"])}
-                  options={[
-                    { value: "soonest", label: t.listing.sortSoonest },
-                    { value: "priceLow", label: t.listing.sortPriceLow },
-                    { value: "priceHigh", label: t.listing.sortPriceHigh },
-                  ]} />
-              </div>
+              <div className="mt-6 grid gap-4">{selects}</div>
               <div className="mt-8 grid grid-cols-[auto_1fr] gap-3" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
                 <button type="button" onClick={reset} className="btn btn-outline">
                   <RotateCcw className="size-4" />

@@ -6,7 +6,7 @@ import { ArrowRight, CalendarDays, Clock3, MapPin } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
 import type { Trip } from "@/lib/types";
-import { AvailabilityBadge, Price, ServiceList, cardFacts, durationLabel } from "./TripMeta";
+import { AvailabilityBadge, OfferStamp, Price, ServiceList, cardFacts, durationLabel } from "./TripMeta";
 
 type Props = { trip: Trip; className?: string; priority?: boolean };
 
@@ -39,18 +39,18 @@ export function TripCard({ trip, className, priority }: Props) {
           <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold tracking-wide text-navy-900 backdrop-blur">
             {t.categories[trip.categories[0]]}
           </span>
-          {trip.availability && <AvailabilityBadge availability={trip.availability} />}
+          {trip.availability ? <AvailabilityBadge availability={trip.availability} /> : <OfferStamp trip={trip} />}
         </div>
 
         <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6">
-          <p className="flex items-center gap-1.5 text-[11px] font-semibold tracking-[0.22em] text-sand uppercase">
-            <MapPin className="size-3.5 text-gold" strokeWidth={2} />
-            {l(trip.country)} · {l(trip.destination)}
+          <p className="flex items-center gap-1.5 text-[12px] font-semibold tracking-[0.12em] text-sand uppercase">
+            <MapPin className="size-3.5 text-sun" strokeWidth={2} />
+            {l(trip.destination)}
           </p>
-          <h3 className="mt-2 text-2xl leading-tight font-semibold tracking-tight text-balance">{l(trip.title)}</h3>
+          <h3 className="mt-2 font-display text-2xl leading-tight font-semibold tracking-tight text-balance">{l(trip.title)}</h3>
           {duration && (
             <p className="mt-2 flex items-center gap-1.5 text-sm text-white/80">
-              <Clock3 className="size-4 text-teal" strokeWidth={1.8} />
+              <Clock3 className="size-4 text-sun" strokeWidth={1.8} />
               {duration}
             </p>
           )}

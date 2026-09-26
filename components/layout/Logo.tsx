@@ -11,15 +11,15 @@ export function Logo({ tone = "light", size = "md", className }: Props) {
   return (
     <Link href="/" aria-label={company.name} className={cn("group flex items-center gap-3", className)} dir="ltr">
       <LogoMark
-        withText={lg}
+        preload={!lg}
         className={cn(
-          "shrink-0 drop-shadow-[0_4px_14px_rgba(7,21,38,0.25)] transition-transform duration-500 ease-(--ease-premium) group-hover:scale-105",
-          lg ? "size-24" : "size-12",
+          "shrink-0 shadow-[0_4px_14px_rgba(12,33,48,0.18)] ring-1 ring-navy-900/5 transition-transform duration-500 ease-(--ease-premium) group-hover:scale-105",
+          lg ? "size-20" : "size-12",
         )}
       />
-      <span className={cn("flex flex-col leading-none transition-colors duration-500", light ? "text-white" : "text-navy-900")}>
-        <span className="text-[15px] font-bold tracking-[0.32em]">{company.logo.top}</span>
-        <span className={cn("mt-1 text-[10px] font-medium tracking-[0.52em]", light ? "text-white/70" : "text-ocean")}>{company.logo.bottom}</span>
+      <span className={cn("flex items-baseline gap-1.5 font-display leading-none transition-colors duration-500", light ? "text-white" : "text-slate-brand")}>
+        <span className={cn("font-bold tracking-[0.08em]", lg ? "text-3xl" : "text-[22px]")}>LAVIE</span>
+        <span className={cn("font-medium tracking-[0.2em]", lg ? "text-base" : "text-[12px]", light ? "text-white/75" : "text-slate-brand/80")}>TOURS</span>
       </span>
     </Link>
   );

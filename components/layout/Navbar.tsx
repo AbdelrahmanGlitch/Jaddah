@@ -4,13 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Globe, Menu, X } from "lucide-react";
+import { ArrowUpRight, Globe, Menu, Phone, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { useLang } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
 import { company, chatLink } from "@/data/company";
-import { FacebookIcon } from "@/components/ui/BrandIcons";
-import { ChatIcon } from "@/components/ui/ChatIcon";
+import { FacebookIcon, WhatsAppIcon } from "@/components/ui/BrandIcons";
 
 export function Navbar() {
   const { t, toggleLang, lang } = useLang();
@@ -35,16 +34,18 @@ export function Navbar() {
 
   const links = [
     { href: "/", label: t.nav.home },
-    { href: "/trips", label: t.nav.trips },
+    { href: "/trips", label: t.nav.offers },
     { href: "/#destinations", label: t.nav.destinations },
+    { href: "/#flights", label: t.nav.flights },
     { href: "/#about", label: t.nav.about },
-    { href: "/#why-us", label: t.nav.whyUs },
     { href: "/#faq", label: t.nav.faq },
     { href: "/#contact", label: t.nav.contact },
   ];
 
   const isActive = (href: string) => (href === "/" ? pathname === "/" : !href.includes("#") && pathname.startsWith(href));
   const solid = scrolled && !open;
+  // The home hero is light (sand), every other page opens on a dark photo hero.
+  const dark = solid || (pathname === "/" && !open);
 
   return (
     <>
@@ -54,9 +55,9 @@ export function Navbar() {
           solid ? "border-b border-navy-900/5 bg-white/85 py-3 shadow-[0_8px_30px_-20px_rgba(11,31,51,0.35)] backdrop-blur-xl" : "bg-transparent py-5",
         )}
       >
-        {!solid && <div className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-navy-950/50 to-transparent" />}
+        {!dark && <div className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-navy-950/50 to-transparent" />}
         <div className="container-x flex items-center justify-between gap-6">
-          <Logo tone={solid ? "dark" : "light"} />
+          <Logo tone={dark ? "dark" : "light"} />
 
           <nav className="hidden items-center gap-1 xl:flex" aria-label="Main">
             {links.map((link) => (
@@ -65,12 +66,12 @@ export function Navbar() {
                 href={link.href}
                 className={cn(
                   "relative px-3.5 py-2 text-[13.5px] font-medium transition-colors duration-300",
-                  solid ? "text-ink/70 hover:text-navy-900" : "text-white/80 hover:text-white",
-                  isActive(link.href) && (solid ? "text-navy-900" : "text-white"),
+                  dark ? "text-ink/70 hover:text-navy-900" : "text-white/80 hover:text-white",
+                  isActive(link.href) && (dark ? "text-navy-900" : "text-white"),
                 )}
               >
                 {link.label}
-                {isActive(link.href) && <span className="absolute inset-x-3.5 -bottom-0.5 h-px bg-gold" />}
+                {isActive(link.href) && <span className="absolute inset-x-3.5 -bottom-0.5 h-px bg-sun-deep" />}
               </Link>
             ))}
           </nav>
@@ -82,15 +83,16 @@ export function Navbar() {
               aria-label={t.lang.label}
               className={cn(
                 "flex items-center gap-2 rounded-full px-3.5 py-2 text-[13px] font-semibold transition-colors",
-                solid ? "text-navy-900 hover:bg-navy-900/5" : "text-white hover:bg-white/10",
+                dark ? "text-navy-900 hover:bg-navy-900/5" : "text-white hover:bg-white/10",
               )}
             >
               <Globe className="size-4" strokeWidth={1.6} />
               <span className={lang === "en" ? "font-arabic" : ""}>{t.lang.switchTo}</span>
             </button>
-            <Link href="/trips" className={cn("btn hidden py-3 md:inline-flex", "btn-primary")}>
+            <a href={chatLink().href} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp hidden py-3 md:inline-flex">
+              <WhatsAppIcon className="size-4" />
               {t.nav.cta}
-            </Link>
+            </a>
             <button
               type="button"
               onClick={() => setOpen((o) => !o)}
@@ -98,7 +100,7 @@ export function Navbar() {
               aria-expanded={open}
               className={cn(
                 "grid size-11 place-items-center rounded-full border transition-colors xl:hidden",
-                solid ? "border-navy-900/10 text-navy-900" : "border-white/30 text-white",
+                dark ? "border-navy-900/10 text-navy-900" : "border-white/30 text-white",
               )}
             >
               {open ? <X className="size-5" strokeWidth={1.6} /> : <Menu className="size-5" strokeWidth={1.6} />}
@@ -132,10 +134,10 @@ export function Navbar() {
                     className="group flex items-center justify-between border-b border-white/10 py-4 text-3xl font-semibold tracking-tight text-white"
                   >
                     <span className="flex items-baseline gap-4">
-                      <span className="text-xs font-medium text-gold tabular-nums">0{i + 1}</span>
+                      <span className="text-xs font-medium text-sun tabular-nums">0{i + 1}</span>
                       {link.label}
                     </span>
-                    <ArrowUpRight className="size-5 text-white/30 transition group-hover:text-teal rtl:-scale-x-100" />
+                    <ArrowUpRight className="size-5 text-white/30 transition group-hover:text-sun rtl:-scale-x-100" />
                   </Link>
                 </motion.div>
               ))}
@@ -147,13 +149,14 @@ export function Navbar() {
               transition={{ delay: 0.45, duration: 0.6 }}
               className="mt-auto flex flex-col gap-3 pt-10"
             >
-              <Link href="/trips" onClick={() => setOpen(false)} className="btn btn-primary w-full py-4 text-base">
+              <a href={chatLink().href} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp w-full py-4 text-base">
+                <WhatsAppIcon className="size-5" />
                 {t.nav.cta}
-              </Link>
+              </a>
               <div className="grid grid-cols-2 gap-3">
-                <a href={chatLink().href} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light">
-                  <ChatIcon className="size-4" />
-                  {t.booking.chat}
+                <a href={`tel:${company.bookingLines[0]}`} className="btn btn-ghost-light">
+                  <Phone className="size-4" />
+                  {t.nav.call}
                 </a>
                 <a href={company.facebook.url} target="_blank" rel="noopener noreferrer" className="btn btn-ghost-light">
                   <FacebookIcon className="size-4" />

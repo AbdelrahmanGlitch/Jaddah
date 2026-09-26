@@ -38,7 +38,7 @@ export function Destinations() {
           {company.demoMode && (
             <Reveal delay={0.1}>
               <p className="flex items-center gap-2 text-xs text-white/50">
-                <Info className="size-3.5 text-gold" />
+                <Info className="size-3.5 text-sun-deep" />
                 {t.destinations.demoNote}
               </p>
             </Reveal>
@@ -69,6 +69,7 @@ export function Destinations() {
                     fill
                     sizes={big ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 25vw"}
                     className="object-cover transition-transform duration-[1.8s] ease-(--ease-premium) group-hover:scale-110"
+                    style={{ objectPosition: d.imagePosition }}
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-navy-950/90 via-navy-950/20 to-transparent transition-opacity duration-700 group-hover:opacity-90" />
                   <div className="absolute inset-0 bg-ocean/0 transition-colors duration-700 group-hover:bg-ocean/15" />
@@ -79,13 +80,13 @@ export function Destinations() {
 
                   <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6">
                     <p className="text-[10px] font-semibold tracking-[0.22em] text-sand/80 uppercase sm:text-[11px]">{l(d.country)}</p>
-                    <h3 className={cn("mt-1 leading-tight font-semibold tracking-tight", big ? "text-2xl sm:text-4xl" : "text-lg sm:text-2xl")}>{l(d.name)}</h3>
+                    <h3 className={cn("mt-1 font-display leading-tight font-semibold tracking-tight", big ? "text-2xl sm:text-4xl" : "text-lg sm:text-2xl")}>{l(d.name)}</h3>
 
                     {/* Revealed on hover (always visible on touch devices) */}
                     <div className="grid grid-rows-[1fr] transition-all duration-500 ease-(--ease-premium) [@media(hover:hover)]:grid-rows-[0fr] [@media(hover:hover)]:group-hover:grid-rows-[1fr]">
                       <div className="overflow-hidden">
                         <p className={cn("mt-2 text-sm text-white/70", !big && "hidden sm:block")}>{l(d.tagline)}</p>
-                        <span className="mt-3 inline-flex items-center gap-2 text-[13px] font-semibold text-teal">
+                        <span className="mt-3 inline-flex items-center gap-2 text-[13px] font-semibold text-sun">
                           {t.destinations.explore}
                           <ArrowRight className="size-4 transition-transform group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1" />
                         </span>
@@ -97,22 +98,23 @@ export function Destinations() {
             );
           })}
 
-          {/* Closing CTA tile */}
-          <Reveal className="col-span-2 lg:col-span-4" y={30}>
-            <Link
-              href="/trips"
-              className="group flex h-full flex-col justify-between rounded-lg border border-white/10 bg-white/[0.04] p-6 transition-colors duration-500 hover:border-teal/50 hover:bg-white/[0.07] sm:p-8"
-            >
-              <span className="eyebrow text-gold">{t.nav.trips}</span>
-              <span className="flex items-end justify-between gap-6">
-                <span className="max-w-xs text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">{t.trips.title}</span>
-                <span className="grid size-14 shrink-0 place-items-center rounded-full bg-teal text-navy-950 transition-transform duration-500 group-hover:rotate-45 rtl:group-hover:-rotate-45">
-                  <ArrowUpRight className="size-6 rtl:-scale-x-100" />
-                </span>
-              </span>
-            </Link>
-          </Reveal>
         </div>
+
+        {/* Closing CTA tile */}
+        <Reveal className="mt-3 sm:mt-4" y={30}>
+          <Link
+            href="/#booking"
+            className="group flex flex-col gap-6 rounded-lg border border-white/10 bg-white/[0.04] p-6 transition-colors duration-500 hover:border-sun/50 hover:bg-white/[0.07] sm:p-8"
+          >
+            <span className="eyebrow text-sun">{t.booking.eyebrow}</span>
+            <span className="flex items-end justify-between gap-6">
+              <span className="max-w-md font-display text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">{t.destinations.ctaTitle}</span>
+              <span className="grid size-14 shrink-0 place-items-center rounded-full bg-sun text-navy-950 transition-transform duration-500 group-hover:rotate-45 rtl:group-hover:-rotate-45">
+                <ArrowUpRight className="size-6 rtl:-scale-x-100" />
+              </span>
+            </span>
+          </Link>
+        </Reveal>
       </div>
     </section>
   );

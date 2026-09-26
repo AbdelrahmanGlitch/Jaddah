@@ -2,24 +2,25 @@ import type { Destination } from "@/lib/types";
 import { images } from "./images";
 
 /**
- * DESTINATIONS — only destinations of Jeddah Tourism's verified offers.
+ * DESTINATIONS — only places LAVIE TOURS advertises in its Facebook offers.
  * `id` is used by trips (trip.destinationId) and by the trip filters.
  */
 export const destinations: Destination[] = [
   {
-    id: "makkah-madinah",
-    name: { en: "Makkah & Madinah", ar: "مكة المكرمة والمدينة المنورة" },
-    country: { en: "Saudi Arabia", ar: "السعودية" },
-    tagline: { en: "Hajj & Umrah programs", ar: "برامج الحج والعمرة" },
-    image: images.madinahGreenDomePortrait,
-    scope: "international",
+    id: "new-alamein",
+    name: { en: "New Alamein", ar: "العلمين الجديدة" },
+    country: { en: "North Coast · Egypt", ar: "الساحل الشمالي · مصر" },
+    tagline: { en: "Gewan Resort, Gewan White Beach & Dayz Inn", ar: "جيوان ريزورت وجيوان وايت بيتش و Dayz Inn" },
+    image: images.gewanResort,
+    scope: "domestic",
   },
   {
-    id: "marsa-matrouh",
-    name: { en: "Marsa Matrouh", ar: "مرسى مطروح" },
-    country: { en: "Egypt", ar: "مصر" },
-    tagline: { en: "Summer coastal trips", ar: "رحلات صيفية" },
-    image: images.matrouhAgibaCove,
+    id: "ain-sokhna",
+    name: { en: "Ain Sokhna", ar: "العين السخنة" },
+    country: { en: "Red Sea · Egypt", ar: "البحر الأحمر · مصر" },
+    tagline: { en: "Tolip Galala Heights — aqua park", ar: "توليب الجلالة هايتس — أكوا بارك" },
+    image: images.tulipAquaPark,
+    imagePosition: "50% 68%",
     scope: "domestic",
   },
 ];

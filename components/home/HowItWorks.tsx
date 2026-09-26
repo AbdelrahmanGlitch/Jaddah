@@ -19,7 +19,7 @@ export function HowItWorks() {
           {/* Horizontal line (desktop) */}
           <div className="absolute inset-x-[12.5%] top-8 hidden h-px bg-line md:block" aria-hidden="true">
             <motion.div
-              className="h-full origin-left bg-linear-to-r from-ocean via-teal to-gold rtl:origin-right"
+              className="h-full origin-left bg-linear-to-r from-ocean via-sun to-sun-deep rtl:origin-right"
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -29,7 +29,7 @@ export function HowItWorks() {
           {/* Vertical line (mobile) */}
           <div className="absolute inset-y-2 start-8 w-px bg-line md:hidden" aria-hidden="true">
             <motion.div
-              className="w-full origin-top bg-linear-to-b from-ocean via-teal to-gold"
+              className="w-full origin-top bg-linear-to-b from-ocean via-sun to-sun-deep"
               style={{ height: "100%" }}
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
@@ -49,7 +49,7 @@ export function HowItWorks() {
             >
               <span className="relative z-10 grid size-16 shrink-0 place-items-center rounded-full border border-line bg-white text-lg font-semibold text-navy-900 shadow-[0_10px_30px_-15px_rgba(11,31,51,0.3)] tabular-nums">
                 0{i + 1}
-                <span className="absolute -end-0.5 -top-0.5 size-3 rounded-full border-2 border-white bg-teal" />
+                <span className="absolute -end-0.5 -top-0.5 size-3 rounded-full border-2 border-white bg-sun" />
               </span>
               <div className="pt-2 md:pt-6">
                 <h3 className="text-xl font-semibold tracking-tight text-navy-900">{l(step.title)}</h3>
